@@ -1,16 +1,36 @@
 name: primeira-pipeline
 on:
   push: 
-    branches: ["main"]
-  workflow_dispatch:
+    branches: ["main"]  # O workflow será acionado quando houver um push na branch 'main'
+  workflow_dispatch:  # Permite que o workflow seja acionado manualmente através da interface do GitHub
+
 jobs:
   primeiro-job:
     name: "Meu Primeiro Job"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # O job será executado em uma máquina virtual com o Ubuntu mais recente
     steps:
       - name: "Minha primeira ação"
-        run: echo "Hello World !!!"
+        run: echo "Hello World !!!"  # Exibe a mensagem "Hello World !!!" no console
       - name: "Segunda ação"
         run: |
           echo "Você criou o seu primeiro workflow !!!"
-          echo "Parabéns !!!"
+          echo "Parabéns !!!"  # Exibe duas mensagens de congratulação no console
+      - name: "Script Python"
+        run: |
+          variavel = "Hello World !!!"
+          print(variavel)  # Define uma variável em Python e imprime seu valor no console
+        shell: python  # Especifica que o shell utilizado para esta etapa será o Python
+
+  segundo-job:
+    name: "Instalação do Ambiente NodeJS"
+    runs-on: ubuntu-latest  # O job será executado em uma máquina virtual com o Ubuntu mais recente
+    needs: [primeiro-job]  # Este job só será executado após a conclusão bem-sucedida do 'primeiro-job'
+    steps: 
+       - name: "Verificação da versão do NodeJS atual"
+         run: node --version  # Verifica e exibe a versão atual do NodeJS instalada na máquina
+       - name: "Definição da versão 20.13.1 do NodeJS"
+         uses: actions/setup-node@v4.0.2  # Utiliza a ação 'setup-node' para instalar a versão especificada do NodeJS
+         with:       
+          node-version: '20.13.1'  # Especifica a versão 20.13.1 do NodeJS a ser instalada
+       - name: "Verificação da versão do NodeJS depois de instalar"
+         run: node --version  # Verifica e exibe a versão do NodeJS após a instalação da nova versão
